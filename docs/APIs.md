@@ -19,6 +19,8 @@ Clone the repo and run it locally.
 git clone https://github.com/frozenbroccoli/podcasts-platform
 
 cd podcasts-platform
+
+git checkout development
 ```
 
 Paste the `.env` file (yes) here. Then run the server.
