@@ -1,2 +1,3 @@
-# podcasts-platform
-The backend of a cross-platform podcast application.
+# Podcasts Platform
+
+A place for podcasts or some shit.
