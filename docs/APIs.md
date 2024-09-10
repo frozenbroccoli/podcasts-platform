@@ -11,31 +11,14 @@ podcasts search, the page size being `20`.
 
 Make a GET request to the endpoint `{{base_url}}/podcasts/search/?query={{query}}&page={{page}}`.
 
-### How to run the development server?
+### Can I get an ordered response?
 
-Clone the repo and run it locally.
+So far, we have ordering by release date. Ordering can 
+be newest to oldest or the reverse. To get the newest release
+first, call `{{base_url}}/podcasts/search/?query={{query}}&ordering=newest&page={{page}}`.
 
-```commandline
-git clone https://github.com/frozenbroccoli/podcasts-platform
-
-cd podcasts-platform
-
-git checkout development
-```
-
-Paste the `.env` file (yes) here. Then run the server.
-
-```commandline
-python3 manage.py makemigrations
-
-python3 manage.py migrate
-
-python3 manage.py runserver
-```
-
-The server should be up and running at `127.0.0.1:8000/` or `localhost:8000/`.
+For the opposite, call `{{base_url}}/podcasts/search/?query={{query}}&ordering=oldest&page={{page}}`
 
 ### Next order of business
 
-1. Sort/filter the search results based on dates published.
-2. Sort/filter based on rating.
+1. Sort/filter based on rating.
