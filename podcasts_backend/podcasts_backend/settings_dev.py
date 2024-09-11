@@ -91,6 +91,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'podcasts_backend.wsgi.application'
 
+AUTH_USER_MODEL = 'users.User'
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Podcasts Platform Backend',
     'DESCRIPTION': 'REST APIs for Podcasts Platform frontend app.',
