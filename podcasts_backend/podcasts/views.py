@@ -41,6 +41,7 @@ class PodcastSearchView(APIView):
     def get(self, request, *args, **kwargs):
         query = request.query_params.get('query', '')
         ordering = request.query_params.get('ordering', '')
+        limit = request.query_params.get('limit', 50)
 
         def get_release_date(result: dict) -> datetime.date:
             """
@@ -52,7 +53,7 @@ class PodcastSearchView(APIView):
             return datetime.datetime.fromisoformat(result['releaseDate'])
 
         if query:
-            url = f'https://itunes.apple.com/search?term={query}&media=podcast&limit=200'
+            url = f'https://itunes.apple.com/search?term={query}&media=podcast&limit={limit}'
             results = requests.get(url).json()['results']
             match ordering:
                 case 'newest':
