@@ -1,4 +1,5 @@
 import datetime
+import operator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -39,8 +40,7 @@ class PodcastSearchView(APIView):
     List view for Apple podcasts search results.
     """
     def get(self, request, *args, **kwargs):
-        query = request.query_params.get('query', '')
-        ordering = request.query_params.get('ordering', '')
+        query, ordering, attr = [request.query_params.get(key, '') for key in ('query', 'ordering', 'attr',)]
         limit = request.query_params.get('limit', 50)
 
         def get_release_date(result: dict) -> datetime.date:
@@ -53,13 +53,17 @@ class PodcastSearchView(APIView):
             return datetime.datetime.fromisoformat(result['releaseDate'])
 
         if query:
-            url = f'https://itunes.apple.com/search?term={query}&media=podcast&limit={limit}'
+            url = f'https://itunes.apple.com/search?term={query}&media=podcast&attribute={attr}&limit={limit}'
             results = requests.get(url).json()['results']
             match ordering:
                 case 'newest':
                     response = sorted(results, reverse=True, key=get_release_date)
                 case 'oldest':
                     response = sorted(results, reverse=False, key=get_release_date)
+                case 'mostTracks':
+                    response = sorted(results, reverse=True, key=operator.itemgetter('trackCount'))
+                case 'leastTracks':
+                    response = sorted(results, reverse=False, key=operator.itemgetter('trackCount'))
                 case _:
                     response = results
             paginator = PageNumberPagination()
