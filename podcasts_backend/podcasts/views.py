@@ -38,6 +38,16 @@ class EchoView(APIView):
 class PodcastSearchView(APIView):
     """
     List view for Apple podcasts search results.
+
+    Query parameters:
+    query: The query term.
+    ordering: The ordering key. Possible values are
+        newest, oldest, mostTracks, leastTracks. Orders
+        by popular by default.
+    attr: The attribute to search for. Possible values
+        are titleTerm, languageTerm, authorTerm, genreIndex,
+        artistTerm, ratingIndex, keywordsTerm, descriptionTerm.
+    limit: The number of search results. 50 by default. Max 200.
     """
     def get(self, request, *args, **kwargs):
         query, ordering, attr = [request.query_params.get(key, '') for key in ('query', 'ordering', 'attr',)]

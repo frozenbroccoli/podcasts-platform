@@ -13,12 +13,13 @@ Make a GET request to the endpoint `{{base_url}}/podcasts/search/?query={{query}
 
 ### Can I get an ordered response?
 
-So far, we have ordering by release date. Ordering can 
-be newest to oldest or the reverse. To get the newest release
-first, call `{{base_url}}/podcasts/search/?query={{query}}&ordering=newest&page={{page}}`.
+The query parameter key for ordering is `ordering`.
+Currently supported values are `newest`, `oldest`, `mostTracks`, `leastTracks`. 
+Search results are ordered by popularity by default.
 
-For the opposite, call `{{base_url}}/podcasts/search/?query={{query}}&ordering=oldest&page={{page}}`
+### Can I search on only the title or the author?
 
-### Next order of business
-
-1. Sort/filter based on rating.
+Searching for various attributes are currently
+supported. The query parameter key for that is
+`attr`. The possible values are `titleTerm`, `languageTerm`, `authorTerm`, `genreIndex`,
+        `artistTerm`, `ratingIndex`, `keywordsTerm`, and `descriptionTerm`.
