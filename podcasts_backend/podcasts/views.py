@@ -64,7 +64,7 @@ class PodcastSearchView(APIView):
 
         if query:
             url = f'https://itunes.apple.com/search?term={query}&media=podcast&attribute={attr}&limit={limit}'
-            results = requests.get(url).json()['results']
+            results = requests.get(url, timeout=10).json()['results']
             match ordering:
                 case 'newest':
                     response = sorted(results, reverse=True, key=get_release_date)
