@@ -16,3 +16,5 @@ ENV = os.getenv('ENV')
 
 if ENV == 'DEVELOPMENT':
     from .settings_dev import *
+elif ENV == 'PRODUCTION':
+    from .settings_prod import *
