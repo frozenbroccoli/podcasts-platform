@@ -26,4 +26,4 @@ urlpatterns = [
     path('schema/', spectacular_views.SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', spectacular_views.SpectacularSwaggerView.as_view(), name='swagger'),
     path('schema/redoc/', spectacular_views.SpectacularRedocView.as_view(), name='redoc'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -14,7 +14,7 @@ Make a GET request to the endpoint `{{base_url}}/podcasts/search/?query={{query}
 ### Can I get an ordered response?
 
 The query parameter key for ordering is `ordering`.
-Currently supported values are `newest`, `oldest`, `mostTracks`, `leastTracks`. 
+Currently supported values are `newest`, `oldest`, `mostTracks`, and `leastTracks`. 
 Search results are ordered by popularity by default.
 
 ### Can I search on only the title or the author?
