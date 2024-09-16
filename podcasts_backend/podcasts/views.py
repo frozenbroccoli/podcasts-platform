@@ -5,13 +5,13 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 import requests
+from .serializers import PodcastSearchSerializer, PodcastsSearchQueriesSerializer
 
 
 class EchoView(APIView):
     """
     Echo back the request body.
     """
-
     def get(self, request, *args, **kwargs):
         return Response(
             data={
@@ -49,9 +49,12 @@ class PodcastSearchView(APIView):
         artistTerm, ratingIndex, keywordsTerm, descriptionTerm.
     limit: The number of search results. 50 by default. Max 200.
     """
+
     def get(self, request, *args, **kwargs):
-        query, ordering, attr = [request.query_params.get(key, '') for key in ('query', 'ordering', 'attr',)]
-        limit = request.query_params.get('limit', 50)
+        query_serializer = PodcastsSearchQueriesSerializer(data=request.query_params)
+        query_serializer.is_valid(raise_exception=True)
+        query, ordering, attr = [query_serializer.validated_data.get(key, '') for key in ('query', 'ordering', 'attr',)]
+        limit = query_serializer.validated_data.get('limit', 50)
 
         def get_release_date(result: dict) -> datetime.date:
             """
@@ -76,7 +79,9 @@ class PodcastSearchView(APIView):
                     response = sorted(results, reverse=False, key=operator.itemgetter('trackCount'))
                 case _:
                     response = results
+            serializer = PodcastSearchSerializer(response, many=True)
             paginator = PageNumberPagination()
-            paginated_response = paginator.paginate_queryset(response, request)
+            paginated_response = paginator.paginate_queryset(serializer.data, request)
             return paginator.get_paginated_response(paginated_response)
+
         return Response(status=status.HTTP_200_OK)
