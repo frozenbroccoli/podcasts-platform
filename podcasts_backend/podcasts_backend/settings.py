@@ -18,7 +18,7 @@ ENV = os.getenv('ENV')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = Path(__file__).resolve().parent.parent / 'static'
+STATIC_ROOT = Path(__file__).resolve().parent.parent / 'staticfiles'
 STATIC_URL = 'static/'
 
 if ENV == 'DEVELOPMENT':
