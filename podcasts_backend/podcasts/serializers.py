@@ -45,3 +45,12 @@ class PodcastsSearchQueriesSerializer(serializers.Serializer):
         max_value=200,
         default=50
     )
+
+
+class PodcastLookupQueriesSerializer(serializers.Serializer):
+    collectionId = serializers.IntegerField()
+    limit = serializers.IntegerField(
+        min_value=1,
+        max_value=200,
+        default=50
+    )

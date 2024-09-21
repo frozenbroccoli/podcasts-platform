@@ -5,7 +5,10 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 import requests
-from .serializers import PodcastSearchSerializer, PodcastsSearchQueriesSerializer
+from . import serializers
+
+
+base_url = 'https://itunes.apple.com'
 
 
 class EchoView(APIView):
@@ -51,7 +54,7 @@ class PodcastSearchView(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-        query_serializer = PodcastsSearchQueriesSerializer(data=request.query_params)
+        query_serializer = serializers.PodcastsSearchQueriesSerializer(data=request.query_params)
         query_serializer.is_valid(raise_exception=True)
         query, ordering, attr = [query_serializer.validated_data.get(key, '') for key in ('query', 'ordering', 'attr',)]
         limit = query_serializer.validated_data.get('limit', 50)
@@ -66,7 +69,7 @@ class PodcastSearchView(APIView):
             return datetime.datetime.fromisoformat(result['releaseDate'])
 
         if query:
-            url = f'https://itunes.apple.com/search?term={query}&media=podcast&attribute={attr}&limit={limit}'
+            url = f'{base_url}/search?term={query}&media=podcast&attribute={attr}&limit={limit}'
             results = requests.get(url, timeout=10).json()['results']
             match ordering:
                 case 'newest':
@@ -79,9 +82,29 @@ class PodcastSearchView(APIView):
                     response = sorted(results, reverse=False, key=operator.itemgetter('trackCount'))
                 case _:
                     response = results
-            serializer = PodcastSearchSerializer(response, many=True)
+            serializer = serializers.PodcastSearchSerializer(response, many=True)
             paginator = PageNumberPagination()
             paginated_response = paginator.paginate_queryset(serializer.data, request)
+            return paginator.get_paginated_response(paginated_response)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class PodcastEpisodesView(APIView):
+    """
+    Episode lookup view.
+    """
+    def get(self, request, *args, **kwargs):
+        query_serializer = serializers.PodcastLookupQueriesSerializer(data=request.query_params)
+        query_serializer.is_valid(raise_exception=True)
+        collection_id = query_serializer.validated_data.get('collectionId', '')
+        limit = query_serializer.validated_data.get('limit', 50)
+
+        if collection_id:
+            url = f'{base_url}/lookup?id={collection_id}&media=podcast&entity=podcastEpisode&limit={limit}'
+            results = requests.get(url, timeout=10).json()['results']
+            paginator = PageNumberPagination()
+            paginated_response = paginator.paginate_queryset(results, request)
             return paginator.get_paginated_response(paginated_response)
 
         return Response(status=status.HTTP_200_OK)
