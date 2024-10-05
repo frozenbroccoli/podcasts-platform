@@ -47,10 +47,29 @@ class PodcastsSearchQueriesSerializer(serializers.Serializer):
     )
 
 
-class PodcastLookupQueriesSerializer(serializers.Serializer):
+class PodcastEpisodesQueriesSerializer(serializers.Serializer):
     collectionId = serializers.IntegerField()
     limit = serializers.IntegerField(
         min_value=1,
         max_value=200,
         default=50
     )
+
+
+class PodcastInfoSerializer(serializers.Serializer):
+    artistName = serializers.CharField()
+    collectionName = serializers.CharField()
+    thumbnail = serializers.URLField(source='artworkUrl600')
+    collectionId = serializers.IntegerField()
+    kind = serializers.CharField()
+    trackCount = serializers.IntegerField()
+
+
+class EpisodesSerializer(serializers.Serializer):
+    trackId = serializers.IntegerField()
+    trackName = serializers.CharField()
+    trackTimeMillis = serializers.IntegerField()
+    episodeUrl = serializers.URLField()
+    releaseDate = serializers.DateTimeField()
+    description = serializers.CharField()
+    thumbnail = serializers.URLField(source='artworkUrl600')
